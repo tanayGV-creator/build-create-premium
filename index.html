@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>build.create</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #05050a;
+      --card: rgba(15, 15, 25, 0.7);
+      --border: rgba(255,255,255,0.06);
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent1: #00d4ff;
+      --accent2: #7b2ff7;
+      --glow: rgba(123, 47, 247, 0.25);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Background glow */
+    .bg-glow {
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(123,47,247,0.15) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Nav */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 40px;
+      background: rgba(5,5,10,0.75);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .nav-links {
+      display: flex;
+      gap: 8px;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: all 0.25s ease;
+    }
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--text);
+      background: rgba(255,255,255,0.05);
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 120px 24px 90px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(0,212,255,0.08);
+      border: 1px solid rgba(0,212,255,0.2);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      color: var(--accent1);
+      font-weight: 500;
+      margin-bottom: 28px;
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero h1 {
+      font-size: clamp(2.6rem, 6vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #fff 30%, var(--accent1) 70%, var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto 48px;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    /* Cards */
+    .apps {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px 100px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 28px;
+      backdrop-filter: blur(12px);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: fadeUp 0.6s ease both;
+      position: relative;
+      overflow: hidden;
+    }
+    .card:nth-child(1) { animation-delay: 0.25s; }
+    .card:nth-child(2) { animation-delay: 0.35s; }
+    .card:nth-child(3) { animation-delay: 0.45s; }
+
+    .card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      padding: 1px;
+      background: linear-gradient(135deg, transparent, transparent);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      transition: background 0.35s;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(123,47,247,0.3);
+      box-shadow: 0 25px 50px -12px var(--glow);
+    }
+    .card:hover::after {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+    }
+    .card .icon {
+      width: 52px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      background: rgba(255,255,255,0.04);
+      border-radius: 14px;
+      margin-bottom: 20px;
+    }
+    .card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -0.3px;
+    }
+    .card p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+    .card a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: #fff;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      transition: all 0.25s ease;
+    }
+    .card a:hover {
+      filter: brightness(1.1);
+      transform: translateX(2px);
+    }
+    .card a span {
+      transition: transform 0.25s;
+    }
+    .card a:hover span {
+      transform: translateX(3px);
+    }
+
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 32px;
+      color: #475569;
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 14px 20px; }
+      .hero { padding: 80px 20px 60px; }
+      .nav-links a { padding: 6px 12px; font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <nav>
+    <div class="logo">build.create</div>
+    <div class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="projects.html">Projects</a>
+      <a href="about.html">About</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-badge">✦ Live projects</div>
+    <h1>build.create</h1>
+    <p>Websites, apps, and tools built from scratch.<br>Clean. Fast. Useful.</p>
+  </section>
+
+  <div class="apps">
+    <div class="card">
+      <div class="icon">📈</div>
+      <h3>Stock Market</h3>
+      <p>Live stock tracking with clean charts and market overview. Built for speed and clarity.</p>
+      <a href="https://build-create-stocks-1.vercel.app/" target="_blank">Open App <span>→</span></a>
+    </div>
+
+    <div class="card">
+      <div class="icon">🌐</div>
+      <h3>Main Website</h3>
+      <p>The original build.create site — portfolio, services, and everything we create.</p>
+      <a href="https://build-create1-ten.vercel.app/" target="_blank">Open Website <span>→</span></a>
+    </div>
+
+    <div class="card">
+      <div class="icon">🚗</div>
+      <h3>Car Help</h3>
+      <p>Describe the problem, upload a photo, and find nearby mechanics, dealers & towing instantly.</p>
+      <a href="https://build-create-cars.vercel.app/" target="_blank">Open App <span>→</span></a>
+    </div>
+  </div>
+
+  <footer>© 2026 build.create — made with code and curiosity</footer>
+</body>
+</html>
